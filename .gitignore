@@ -4,10 +4,6 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore auto-generated file (on MacOS)
-.DS_Store
-node_modules/
-
 # Ignore bundler config.
 /.bundle
 
@@ -33,3 +29,6 @@ node_modules/
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+node_modules
+.idea

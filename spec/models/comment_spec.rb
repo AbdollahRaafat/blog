@@ -4,8 +4,8 @@ require_relative '../config/environment'
 RSpec.describe Comment, type: :model do
   describe 'validations' do
     author = User.create(name: 'Charles', photo: 'photo.png', bio: 'Love Coding', posts_counter: 0)
-    post = Post.create(author: author, title: 'Post', likes_counter: 0, comments_counter: 0)
-    subject { Comment.new(author: author, post: post, text: 'Comment') }
+    post = Post.create(author:, title: 'Post', likes_counter: 0, comments_counter: 0)
+    subject { Comment.new(author:, post:, text: 'Comment') }
 
     before { subject.save }
 

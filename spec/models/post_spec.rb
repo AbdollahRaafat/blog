@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Post, type: :model do
   describe 'validations' do
     author = User.create(name: 'Charles', photo: 'photo.png', bio: 'Love Coding', posts_counter: 0)
-    subject { Post.new(author: author, title: 'Post', likes_counter: 5, comments_counter: 5) }
+    subject { Post.new(author:, title: 'Post', likes_counter: 5, comments_counter: 5) }
 
     before { subject.save }
 
@@ -36,7 +36,7 @@ RSpec.describe Post, type: :model do
     end
 
     describe 'should test methods in post model' do
-      before { 5.times { |comment| Comment.create(author: author, text: "Comment #{comment}", post: subject) } }
+      before { 5.times { |comment| Comment.create(author:, text: "Comment #{comment}", post: subject) } }
 
       it 'post should have five recent comments' do
         expect(subject.recent_comments).to eq(subject.comments.last(5))

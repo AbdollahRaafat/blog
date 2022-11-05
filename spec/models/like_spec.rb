@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Like, type: :model do
   describe 'validations' do
     author = User.create(name: 'Charles', photo: 'photo.png', bio: 'Love Coding', posts_counter: 0)
-    post = Post.create(author: author, title: 'Post', likes_counter: 5, comments_counter: 5)
-    subject { Like.new(author: author, post: post) }
+    post = Post.create(author:, title: 'Post', likes_counter: 5, comments_counter: 5)
+    subject { Like.new(author:, post:) }
 
     before { subject.save }
 

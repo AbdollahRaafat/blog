@@ -1,32 +1,48 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe 'validations' do
-    subject { User.new(name: 'Charles', photo: 'photo.png', bio: 'Love Coding') }
-
-    before { subject.save }
-
-    it 'name should be present' do
-      subject.name = nil
-      expect(subject).to_not be_valid
+  context 'Validations' do
+    it 'checks if name is empty' do
+      user = User.new(photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Nice user', posts_counter: 0)
+      expect(user.valid?).to eq false
     end
 
-    it 'bio should be present' do
-      subject.bio = nil
-      expect(subject).to_not be_valid
+    it 'checks if posts_counter is an integer' do
+      user = User.new(name: 'John', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Nice user',
+                      posts_counter: 1.5)
+      expect(user.valid?).to eq false
     end
 
-    it 'posts_counter should br greater or equal to 0' do
-      subject.posts_counter = -1
-      expect(subject).to_not be_valid
+    it 'checks if posts_counter is greater or equal to zero' do
+      user = User.new(name: 'Tom', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Nice user',
+                      posts_counter: -1)
+      expect(user.valid?).to eq false
+    end
+  end
+
+  context 'Associations' do
+    it 'has many posts' do
+      user = User.reflect_on_association('posts')
+      expect(user.macro).to eq(:has_many)
     end
 
-    describe '#recent_posts' do
-      before { 5.times { |post| Post.create(author: subject, title: "Post  #{post}") } }
+    it 'has many comments' do
+      user = User.reflect_on_association('comments')
+      expect(user.macro).to eq(:has_many)
+    end
 
-      it 'should return recent posts' do
-        expect(subject.recent_posts).to eq(subject.posts.last(3))
-      end
+    it 'has many likes' do
+      user = User.reflect_on_association('likes')
+      expect(user.macro).to eq(:has_many)
+    end
+  end
+
+  context 'Custom methods' do
+    it 'returns recent posts' do
+      user = User.create(name: 'Tom', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Teacher from Mexico.',
+                         posts_counter: 0)
+      7.times { Post.create(author: user, title: 'Hello', text: 'This is my first post') }
+      expect(user.recent_posts).to eq user.posts.last(3)
     end
   end
 end

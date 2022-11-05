@@ -1,46 +1,78 @@
 require 'rails_helper'
 
 RSpec.describe Post, type: :model do
-  describe 'validations' do
-    author = User.create(name: 'Charles', photo: 'photo.png', bio: 'Love Coding', posts_counter: 0)
-    subject { Post.new(author:, title: 'Post', likes_counter: 5, comments_counter: 5) }
+  before(:all) do
+    @user = User.create(name: 'Tom', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Teacher from Mexico.',
+                        posts_counter: 0)
+  end
 
-    before { subject.save }
-
-    it 'title should be present' do
-      subject.title = nil
-      expect(subject).to_not be_valid
+  context 'Validations' do
+    it 'checks for title presence' do
+      post = Post.new(author: @user, text: 'This is my first post', likes_counter: 0, comments_counter: 0)
+      expect(post.valid?).to eq false
     end
 
-    it 'title should have a maximum length of 250' do
-      subject.title = Array.new(251, 'a').join
-      expect(subject).to_not be_valid
-
-      subject.title = 'Amazing'
-      expect(subject).to be_valid
+    it 'checks for title length' do
+      test_title = 'I' * 260
+      post = Post.new(author: @user, title: test_title, text: 'This is my first post', likes_counter: 0,
+                      comments_counter: 0)
+      expect(post.valid?).to eq false
     end
 
-    it 'author should be present' do
-      subject.author = nil
-      expect(subject).to_not be_valid
+    it 'checks if likes_counter is an integer' do
+      post = Post.new(author: @user, title: 'Post communication', text: 'This is my first post', likes_counter: 1.7,
+                      comments_counter: 0)
+      expect(post.valid?).to eq false
     end
 
-    it 'comments counter should be greater than or equal to 0' do
-      subject.comments_counter = -1
-      expect(subject).to_not be_valid
+    it 'checks if comments_counter is an integer' do
+      post = Post.new(author: @user, title: 'Post communication', text: 'This is my first post', likes_counter: 0,
+                      comments_counter: 1.8)
+      expect(post.valid?).to eq false
     end
 
-    it 'likes counter should be greater than or equal to 0' do
-      subject.likes_counter = -1
-      expect(subject).to_not be_valid
+    it 'checks if likes_counter is greater or equal to zero' do
+      post = Post.new(author: @user, title: 'Post communication', text: 'This is my first post', likes_counter: -1,
+                      comments_counter: 0)
+      expect(post.valid?).to eq false
     end
 
-    describe 'should test methods in post model' do
-      before { 5.times { |comment| Comment.create(author:, text: "Comment #{comment}", post: subject) } }
+    it 'checks if comments_counter is greater or equal to zero' do
+      post = Post.new(author: @user, title: 'Post communication', text: 'This is my first post', likes_counter: 0,
+                      comments_counter: -1)
+      expect(post.valid?).to eq false
+    end
+  end
 
-      it 'post should have five recent comments' do
-        expect(subject.recent_comments).to eq(subject.comments.last(5))
-      end
+  context 'Associations' do
+    it 'belongs to an author' do
+      post = Post.reflect_on_association('author')
+      expect(post.macro).to eq(:belongs_to)
+    end
+
+    it 'has many comments' do
+      post = Post.reflect_on_association('comments')
+      expect(post.macro).to eq(:has_many)
+    end
+
+    it 'has many likes' do
+      post = Post.reflect_on_association('likes')
+      expect(post.macro).to eq(:has_many)
+    end
+  end
+
+  context 'Custom methods' do
+    it 'returns recent comments' do
+      post = Post.create(author: @user, title: 'Post communication', text: 'This is my first post', likes_counter: 0,
+                         comments_counter: 0)
+      8.times { Comment.create(post:, author: @user, text: 'Hi Tom!') }
+      expect(post.recent_comments).to match_array(post.comments.last(5))
+    end
+
+    it 'updates posts_counter of the author' do
+      Post.create(author: @user, title: 'Post communication', text: 'This is my first post', likes_counter: 0,
+                  comments_counter: 0)
+      expect(@user.posts_counter).to eq 2
     end
   end
 end

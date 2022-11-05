@@ -1,29 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe Like, type: :model do
-  before(:all) do
-    @user = User.create(name: 'Tom', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Teacher from Mexico.',
-                        posts_counter: 0)
-    @post = Post.create(author: @user, title: 'Post communication', text: 'This is my first post', likes_counter: 0,
-                        comments_counter: 0)
-  end
+  describe 'validations' do
+    author = User.create(name: 'Charles', photo: 'photo.png', bio: 'Love Coding', posts_counter: 0)
+    post = Post.create(author: author, title: 'Post', likes_counter: 5, comments_counter: 5)
+    subject { Like.new(author: author, post: post) }
 
-  context 'Associations' do
-    it 'belongs to an author' do
-      like = Like.reflect_on_association('author')
-      expect(like.macro).to eq(:belongs_to)
+    before { subject.save }
+
+    it 'author id should be an integer' do
+      subject.author_id = 'a'
+      expect(subject).to_not be_valid
     end
 
-    it 'belongs to a post' do
-      like = Like.reflect_on_association('post')
-      expect(like.macro).to eq(:belongs_to)
-    end
-  end
-
-  context 'Custom methods' do
-    it 'updates likes counter of the post' do
-      Like.create(author: @user, post: @post)
-      expect(@post.likes_counter).to eq 1
+    it 'post id should be an integer' do
+      subject.post_id = 'p'
+      expect(subject).to_not be_valid
     end
   end
 end

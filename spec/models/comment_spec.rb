@@ -1,26 +1,29 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  describe 'validations' do
-    author = User.create(name: 'Charles', photo: 'photo.png', bio: 'Love Coding', posts_counter: 0)
-    post = Post.create(author: author, title: 'Post', likes_counter: 0, comments_counter: 0)
-    subject { Comment.new(author: author, post: post, text: 'Comment') }
+  before(:all) do
+    @user = User.create(name: 'Tom', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Teacher from Mexico.',
+                        posts_counter: 0)
+    @post = Post.create(author: @user, title: 'Post communication', text: 'This is my first post', likes_counter: 0,
+                        comments_counter: 0)
+  end
 
-    before { subject.save }
-
-    it 'text should not be valid' do
-      subject.text = nil
-      expect(subject).to_not be_valid
+  context 'Associations' do
+    it 'belongs to an author' do
+      comment = Comment.reflect_on_association('author')
+      expect(comment.macro).to eq(:belongs_to)
     end
 
-    it 'author id should be a number' do
-      subject.author_id = 'a'
-      expect(subject).to_not be_valid
+    it 'belongs to a post' do
+      comment = Comment.reflect_on_association('post')
+      expect(comment.macro).to eq(:belongs_to)
     end
+  end
 
-    it 'post id should be a number' do
-      subject.post_id = 'b'
-      expect(subject).to_not be_valid
+  context 'Custom methods' do
+    it 'updates likes counter of the post' do
+      Comment.create(author: @user, post: @post, text: 'I like this post')
+      expect(@post.comments_counter).to eq 1
     end
   end
 end

@@ -1,4 +1,4 @@
-class Post < ApplicationRecord
+class post < ApplicationRecord
   has_many :likes, dependent: :destroy
   has_many :comments, dependent: :destroy
   belongs_to :author, class_name: 'User'

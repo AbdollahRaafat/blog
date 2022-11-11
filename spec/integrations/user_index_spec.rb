@@ -1,25 +1,25 @@
 require 'rails_helper'
 
 RSpec.describe 'User index', type: :feature do
-before(:each) do
-  @first_user = User.create(
-    name: 'Charles',
-    photo: 'https://i.im.ge/2022/10/30/2R6c3h.man.jpg',
-    bio: 'Teacher from Nigeria.',
-    posts_counter: 2
-  )
+  before(:each) do
+    @first_user = User.create(
+      name: 'Charles',
+      photo: 'https://i.im.ge/2022/10/30/2R6c3h.man.jpg',
+      bio: 'Teacher from Nigeria.',
+      posts_counter: 2
+    )
 
-  User.create(
-    name: 'Tracey',
-    photo: 'https://i.im.ge/2022/10/30/2R6RqY.woman.jpg',
-    bio: 'Teacher from Kenya.',
-    posts_counter: 5
-  )
+    User.create(
+      name: 'Tracey',
+      photo: 'https://i.im.ge/2022/10/30/2R6RqY.woman.jpg',
+      bio: 'Teacher from Kenya.',
+      posts_counter: 5
+    )
 
-  @users = User.all
-end
+    @users = User.all
+  end
 
-describe 'integration' do
+  describe 'integration' do
     before(:each) { visit users_path }
 
     scenario 'shows the username of all other users' do

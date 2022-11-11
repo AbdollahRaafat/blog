@@ -9,12 +9,12 @@ RSpec.describe 'User index', type: :feature do
       posts_counter: 2
     )
 
-    User.create(
-      name: 'Tracey',
-      photo: 'https://i.im.ge/2022/10/30/2R6RqY.woman.jpg',
-      bio: 'Teacher from Kenya.',
-      posts_counter: 5
-    )
+User.create(
+  name: 'Tracey',
+  photo: 'https://i.im.ge/2022/10/30/2R6RqY.woman.jpg',
+  bio: 'Teacher from Kenya.',
+  posts_counter: 5
+)
 
     @users = User.all
   end

@@ -14,6 +14,13 @@ In this project, you will use migration files to build your schema.
 - Twitter: [AbdollahRaafat](https://twitter.com/abdollah_raafat)
 
 
+### 👤 Kidist Dinku
+
+- GitHub: [Ney2](https://github.com/Ney2)
+- Twitter: [@GutaKidist](https://twitter.com/GutaKidist)
+- Linkedin: [Kidist Dinku](https://www.linkedin.com/in/kidi
+
+
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!

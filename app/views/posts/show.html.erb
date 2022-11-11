@@ -1,17 +1,24 @@
-<h1>Single post</h1>
-
-<p><%= @post.title %> by <%= @post.author.name %> Comments <%= @post.comments_counter %>, Likes <%= @post.likes_counter %></p>
-
-<p><%= @post.text %></p>
-
-<ul>
-  <% @post.comments.each do |comment| %>
-    <p><%= comment.author.name %> : <%= comment.text %></p>
-  <% end %>
-</ul>
-
-<%= form_with url: "/users/#{@post.author_id}/posts/#{@post.id}/likes" do |form| %>
-  <%= form.submit 'Like' %>
-<% end %>
-
-<%= link_to 'Add comment', new_user_post_comment_path(@user, @post) %>
+<section class="main">
+    <article class="container">
+    <h2><%= @post.title %> by <%= @user.name %></h2>
+      <p><%= @post.text %></p>
+      <div class="font-sm right">
+        Comments: <%= @post.comments_counter || 0 %> Likes: <%= @post.likes_counter || 0 %>
+      </div>
+    </article>
+    <div class="actions">
+      <%= form_with model: @like, url: user_post_likes_path(@user, @post), method: :post do |f| %>
+        <%= f.submit 'Like' %>
+      <% end %>
+      <%= link_to new_user_post_comment_path(@user, @post) do %>
+        <button>Comment</button>
+      <% end %>
+    </div>
+    <div class="comments">
+      <% @post.comments.each do |comment| %>
+      <div class='comment'>
+        <span><%= comment.author.name %>: <%= comment.text %></span>
+      </div>
+    <% end %>
+    </div>
+</section>

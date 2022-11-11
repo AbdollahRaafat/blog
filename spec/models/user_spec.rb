@@ -1,48 +1,30 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  context 'Validations' do
-    it 'checks if name is empty' do
-      user = User.new(photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Nice user', posts_counter: 0)
-      expect(user.valid?).to eq false
+  describe 'validations' do
+    subject { User.new(name: 'Charles', photo: 'https://i.im.ge/2022/10/30/2R6c3h.man.jpg', bio: 'Teacher from Nigeria.', posts_counter: 0) }
+
+    it 'should be valid' do
+      expect(subject).to be_valid
     end
 
-    it 'checks if posts_counter is an integer' do
-      user = User.new(name: 'John', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Nice user',
-                      posts_counter: 1.5)
-      expect(user.valid?).to eq false
+    it 'name should be present' do
+      subject.name = nil
+      expect(subject).to_not be_valid
     end
 
-    it 'checks if posts_counter is greater or equal to zero' do
-      user = User.new(name: 'Tom', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Nice user',
-                      posts_counter: -1)
-      expect(user.valid?).to eq false
-    end
-  end
-
-  context 'Associations' do
-    it 'has many posts' do
-      user = User.reflect_on_association('posts')
-      expect(user.macro).to eq(:has_many)
+    it 'posts counter should be an integer' do
+      subject.posts_counter = ''
+      expect(subject).to_not be_valid
     end
 
-    it 'has many comments' do
-      user = User.reflect_on_association('comments')
-      expect(user.macro).to eq(:has_many)
+    it 'posts counter should be greater than or equal to 0' do
+      subject.posts_counter = -1
+      expect(subject).to_not be_valid
     end
 
-    it 'has many likes' do
-      user = User.reflect_on_association('likes')
-      expect(user.macro).to eq(:has_many)
-    end
-  end
-
-  context 'Custom methods' do
     it 'returns recent posts' do
-      user = User.create(name: 'Tom', photo: 'https://unsplash.com/photos/F_-0BxGuVvo', bio: 'Teacher from Mexico.',
-                         posts_counter: 0)
-      7.times { Post.create(author: user, title: 'Hello', text: 'This is my first post') }
-      expect(user.recent_posts).to eq user.posts.last(3)
+      expect(subject.recent_posts).to eq subject.posts.last(3)
     end
   end
 end

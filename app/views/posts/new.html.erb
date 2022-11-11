@@ -1,13 +1,14 @@
-<%= form_with model: @post, url: user_posts_path do |form| %>
-  <div>
-    <%= form.label :title %>
-    <%= form.text_field :title, placeholder: 'Title of post' %>
-  </div>
-  <br>
-  <div>
-    <%= form.label :text %>
-    <%= form.text_area :text, placeholder: 'Description of post' %>
-  </div>
-  <br>
-  <%= form.submit %>
-<% end %>
+<section class="main center">
+  <h2>New Post</h2>
+  <%= form_with model: @post, url: user_posts_path, method: :post, locals: true, scope: :new_post do |f| %>
+    <div>
+      <%= f.label :title %>
+      <%= f.text_field :title %>
+    </div>
+    <div>
+      <%= f.label :text %>
+      <%= f.text_area :text %>
+    </div>
+    <%= f.submit 'Create Post' %>
+  <% end %>
+</section>
